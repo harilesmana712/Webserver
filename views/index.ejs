@@ -93,16 +93,13 @@
     </ul>
     <h2>Daftar Perintah</h2>
     <ul>
+    <select id="command" name="command" required>
         <% for(let cmd in settings.commands) { %>
-            <li class="listcommand">
-                <b><%= cmd %></b>: <%= settings.commands[cmd] %>
-                <form action="/remove-command" method="POST" style="display:inline;">
-                    <input type="hidden" name="command" value="<%= cmd %>">
-                    <button type="submit">Hapus</button>
-                </form>
-            </li>
+            <option value="<%= cmd %>"><%= cmd %></option>
+            <option value="<%= settings.commands[cmd]%"><%= settings.commands[cmd] %></option>
         <% } %>
-    </ul>
+    </select>
+</ul>
     
     <h2>Atur Prefix</h2>
     <form action="/add-prefix" method="POST">
