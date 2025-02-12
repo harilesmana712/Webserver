@@ -361,6 +361,17 @@ app.post('/add-command-image', upload.single('imageUrl'), (req, res) => {
     addCommandImage(command, imageUrl, caption);
     res.redirect('/');
   });
+// Endpoint untuk memperbarui respons perintah yang ada
+app.post('/update-response', (req, res) => {
+    const { command, newResponse } = req.body;
+
+    if (command && newResponse && settings.commands[command]) {
+        settings.commands[command] = newResponse;
+        saveSettings(settings);
+    }
+
+    res.redirect('/');
+});
   // Endpoint remove-command-image
 app.post('/remove-command-image', (req, res) => {
     const { command } = req.body;
