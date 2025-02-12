@@ -5,6 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WhatsApp Bot Panel</title>
     <style>
+        .dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown-button:hover {
+  background-color: #3e8e41;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content .dropdown-item {
+  padding: 12px 16px;
+  display: block;
+}
+
+.dropdown-content .dropdown-item:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropdown-button {
+  background-color: #3e8e41;
+}
         form {
             margin-bottom: 20px;
         }
@@ -92,14 +135,20 @@
       <% } %>
     </ul>
     <h2>Daftar Perintah</h2>
-    <ul>
-    <select id="command" name="command" required>
-        <% for(let cmd in settings.commands) { %>
-            <option value="<%= cmd %>"><%= cmd %></option>
-            <option value="<%= settings.commands[cmd]%"><%= settings.commands[cmd] %></option>
-        <% } %>
-    </select>
-</ul>
+    <div class="dropdown">
+        <button class="dropdown-button">Pilih Command</button>
+        <div class="dropdown-content">
+          <% for(let cmd in settings.commands) { %>
+            <div class="dropdown-item">
+              <b><%= cmd %></b>: <%= settings.commands[cmd].replace(/\n/g, '<br>') %>
+              <form action="/remove-command" method="POST" style="display:inline;">
+                <input type="hidden" name="command" value="<%= cmd %>">
+                <button type="submit">Hapus</button>
+              </form>
+            </div>
+          <% } %>
+        </div>
+      </div>
     
     <h2>Atur Prefix</h2>
     <form action="/add-prefix" method="POST">
