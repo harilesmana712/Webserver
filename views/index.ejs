@@ -5,49 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WhatsApp Bot Panel</title>
     <style>
-        .dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdown-button {
-  background-color: #4CAF50;
-  color: white;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-}
-
-.dropdown-button:hover {
-  background-color: #3e8e41;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-.dropdown-content .dropdown-item {
-  padding: 12px 16px;
-  display: block;
-}
-
-.dropdown-content .dropdown-item:hover {
-  background-color: #f1f1f1;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-.dropdown:hover .dropdown-button {
-  background-color: #3e8e41;
-}
         form {
             margin-bottom: 20px;
         }
@@ -97,20 +54,7 @@
         <input type="text" id="welcomeMessage" name="welcomeMessage" value="<%= settings.welcomeMessage %>" required>
         <button type="submit">Simpan</button>
     </form>
-    <!-- Form Upload Image dan Perintah -->
-<form action="/add-command-image" method="post" enctype="multipart/form-data">
-    <label for="command">Perintah:</label>
-    <input type="text" id="command" name="command" required>
-  
-    <label for="imageUrl">Gambar:</label>
-    <input type="file" id="imageUrl" name="imageUrl" accept="image/*" required>
-  
-    <label for="caption">Caption:</label>
-    <textarea id="caption" name="caption" required></textarea>
-  
-    <button type="submit">Tambahkan Perintah</button>
-  </form>
-
+    
     <h2>Tambah Perintah</h2>
     <form action="/add-command" method="POST">
         <label for="command">Perintah:</label>
@@ -119,36 +63,16 @@
         <textarea type="text" id="response" name="response" required></textarea>
         <button type="submit">Tambah</button>
     </form>
-    <h2>Daftar Perintah Gambar</h2>
-    <ul>
-      <% for(let cmd in settings.messages) { %>
-        <% if(settings.messages[cmd].type === 'image') { %>
-          <li>
-            <b><%= cmd %></b>: <%= settings.messages[cmd].caption %>
-            <img src="<%= settings.messages[cmd].imageUrl %>" alt="<%= cmd %>">
-            <form action="/remove-command-image" method="POST" style="display:inline;">
-              <input type="hidden" name="command" value="<%= cmd %>">
-              <button type="submit">Hapus</button>
-            </form>
-          </li>
-        <% } %>
-      <% } %>
-    </ul>
+    
     <h2>Daftar Perintah</h2>
-    <div class="dropdown">
-        <button class="dropdown-button">Pilih Command</button>
-        <div class="dropdown-content">
-          <% for(let cmd in settings.commands) { %>
-            <div class="dropdown-item">
-              <b><%= cmd %></b>: <%= settings.commands[cmd].replace(/\n/g, '<br>') %>
-              <form action="/remove-command" method="POST" style="display:inline;">
-                <input type="hidden" name="command" value="<%= cmd %>">
-                <button type="submit">Hapus</button>
-              </form>
-            </div>
-          <% } %>
-        </div>
-      </div>
+    <label for="command-dropdown">Pilih Perintah:</label>
+    <select id="command-dropdown">
+        <% for(let cmd in settings.commands) { %>
+            <option value="<%= cmd %>">
+                <%= cmd %>: <br><%= settings.commands[cmd].replace(/\n/g, '<br>') %>
+            </option>
+        <% } %>
+    </select>
     
     <h2>Atur Prefix</h2>
     <form action="/add-prefix" method="POST">
