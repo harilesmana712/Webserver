@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Bot Panel</title>
+    <style>
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="text"] {
+            width: 100%;
+            height: 40px;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+        }
+        select {
+            width: 100%;
+            height: 40px;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+        }
+        button[type="submit"] {
+            width: 100%;
+            height: 40px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover {
+            background-color: #3e8e41;
+        }
+        .listcommand {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>WhatsApp Bot</h1>
+    <p>Status: <%= status %></p>
+    
+    <h2>Atur Pesan Welcome</h2>
+    <form action="/update-welcome" method="POST">
+        <label for="welcomeMessage">Pesan Welcome:</label>
+        <input type="text" id="welcomeMessage" name="welcomeMessage" value="<%= settings.welcomeMessage %>" required>
+        <button type="submit">Simpan</button>
+    </form>
+    <!-- Form Upload Image dan Perintah -->
+<form action="/add-command-image" method="post" enctype="multipart/form-data">
+    <label for="command">Perintah:</label>
+    <input type="text" id="command" name="command" required>
+  
+    <label for="imageUrl">Gambar:</label>
+    <input type="file" id="imageUrl" name="imageUrl" accept="image/*" required>
+  
+    <label for="caption">Caption:</label>
+    <textarea id="caption" name="caption" required></textarea>
+  
+    <button type="submit">Tambahkan Perintah</button>
+  </form>
+
+    <h2>Tambah Perintah</h2>
+    <form action="/add-command" method="POST">
+        <label for="command">Perintah:</label>
+        <input type="text" id="command" name="command" required>
+        <label for="response">Respon:</label>
+        <textarea type="text" id="response" name="response" required></textarea>
+        <button type="submit">Tambah</button>
+    </form>
+    <h2>Daftar Perintah Gambar</h2>
+    <ul>
+      <% for(let cmd in settings.messages) { %>
+        <% if(settings.messages[cmd].type === 'image') { %>
+          <li>
+            <b><%= cmd %></b>: <%= settings.messages[cmd].caption %>
+            <img src="<%= settings.messages[cmd].imageUrl %>" alt="<%= cmd %>">
+            <form action="/remove-command-image" method="POST" style="display:inline;">
+              <input type="hidden" name="command" value="<%= cmd %>">
+              <button type="submit">Hapus</button>
+            </form>
+          </li>
+        <% } %>
+      <% } %>
+    </ul>
+    <h2>Daftar Perintah</h2>
+    <ul>
+        <% for(let cmd in settings.commands) { %>
+            <li class="listcommand">
+                <b><%= cmd %></b>: <%= settings.commands[cmd] %>
+                <form action="/remove-command" method="POST" style="display:inline;">
+                    <input type="hidden" name="command" value="<%= cmd %>">
+                    <button type="submit">Hapus</button>
+                </form>
+            </li>
+        <% } %>
+    </ul>
+    
+    <h2>Atur Prefix</h2>
+    <form action="/add-prefix" method="POST">
+        <label for="prefix">Tambah Prefix:</label>
+        <input type="text" id="prefix" name="prefix" required>
+        <button type="submit">Tambah</button>
+    </form>
+    
+    <h3>Daftar Prefix</h3>
+    <ul>
+        <% settings.prefixes.forEach(prefix => { %>
+            <li>
+                <b><%= prefix %></b>
+                <form action="/remove-prefix" method="POST" style="display:inline;">
+                    <input type="hidden" name="prefix" value="<%= prefix %>">
+                    <button type="submit">Hapus</button>
+                </form>
+            </li>
+        <% }) %>
+    </ul>
+    
+    <h2>Edit Respon</h2>
+    <form action="/update-respon" method="POST">
+        <label for="command">Perintah:</label>
+        <select id="command" name="command" required>
+            <% for(let cmd in settings.commands) { %>
+                <option value="<%= cmd %>"><%= cmd %></option>
+            <% } %>
+        </select>
+        <label for="response">Respon Baru:</label>
+        <input type="text" id="response" name="response" required>
+        <button type="submit">Simpan</button>
+    </form>
+</body>
+</html>
